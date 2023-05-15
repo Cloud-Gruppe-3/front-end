@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { VCardToJSON } from '../utils/vcardparser'
+	import axios from 'axios';
+    import { JSONToVCard, VCardToJSON } from '../utils/vcardparser'
+    import type {JSONData} from '../types'
 
     let fileContents: string = ''
 
@@ -19,12 +21,21 @@
     }
 
     const handleSubmit = async () => {
-        console.log('handlesubmit')
 
-        console.log(fileContents)
-
+        // Get json data from vcard files passed in form
         const filedata = await VCardToJSON(fileContents)
+
+        // TODO: Need to send request with filedata insted
         console.log(filedata)
+    }
+
+    const downloadVcard = async () => {
+
+        // TODO: Need to get the proper link to get all vCards
+        const json: JSONData = await axios.get('api link')
+
+        // 
+        await JSONToVCard(json, 'test')
     }
 </script>
 
@@ -45,11 +56,15 @@
 
     <form action="/api/contacts/zip" method="POST">
         <label for="downloadButton">Download all vCards in zip archive</label>
-        <input type="submit" value="Download" name="downloadButton">
+        <input 
+            on:click={downloadVcard}
+            type="submit" 
+            value="Download" 
+            name="downloadButton">
     </form>
 
-    <form action="/api/contacts/vcard" method="POST">
+    <!-- <form action="/api/contacts/vcard" method="POST">
         <label for="downloadButton">Download all vCards as single .vcf file</label>
         <input type="submit" value="Download" name="downloadButton">
-    </form>
+    </form> -->
 </section>
