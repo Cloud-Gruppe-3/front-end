@@ -1,10 +1,4 @@
-import axios from 'axios' 
-
-type VCardData = Array<JSONData>
-
-interface JSONData {
-    [key: string]: string | number | boolean | null
-}
+import type { JSONData, VCardData} from '../types'
 
 /* 
     Function to parse vcard files into json format
@@ -48,6 +42,9 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
             // Setting the key and value variables to the contents of the line, split on a semicolon
             const [key, value] = trimmedLine.split(':', 2) 
 
+            if(!key || !value) 
+                throw new Error('Incorrect string format')
+
             // Setting the tempobjects key and value to the values of the line content
             tempObject[key] = value 
         }
@@ -59,25 +56,30 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
     }
 }
 
-// TODO: rewrite this function
-// const JSONToVCard = async (jsonObj: JSONData, file: string): Promise<string> => {
-//     try {
-//         const vcard = `BEGIN:VCARD\n${Object.entries(jsonObj)
-//             .filter(([key]) => key !== '_id')
-//             .map(([key, value]) => `${key}:${value}`)
-//             .join('\n')}\nEND:VCARD` 
 
-//         const response = await axios.put(file, vcard, {
-//             headers: { 'Content-Type': 'text/vcard' },
-//         }) 
+const JSONToVCard = async (jsonObj: JSONData, file: string): Promise<void> => {
+    try {
+        const vcard = `BEGIN:VCARD\n${Object.entries(jsonObj)
+            .filter(([key]) => key !== '_id')
+            .map(([key, value]) => `${key}:${value}`)
+            .join('\n')}\nEND:VCARD` 
 
-//         return response.data 
-//     } catch (error) {
-//         throw error 
-//     }
-// }
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(vcard));
+        element.setAttribute('download', file);
+        
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        
+        element.click();
+        
+        document.body.removeChild(element);
+    } catch (error) {
+        throw error
+    }
+}
 
 export {
     VCardToJSON,
-    // JSONToVCard
+    JSONToVCard
 }
