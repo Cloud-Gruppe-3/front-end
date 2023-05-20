@@ -23,9 +23,6 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
             // Removing all whitespace from lines
             const trimmedLine = line.trim() 
 
-            // Checks if it is the end of the file
-            if(trimmedLine.startsWith(' ')) break
-
             // Skips over lines that starts a vcard
             if (trimmedLine.startsWith('BEGIN:VCARD')) continue 
 
@@ -42,8 +39,10 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
             // Setting the key and value variables to the contents of the line, split on a semicolon
             const [key, value] = trimmedLine.split(':', 2) 
 
-            if(!key || !value) 
-                throw new Error('Incorrect string format')
+            if (!key || !value) {
+                console.error('Incorrect string format:', trimmedLine);
+                continue; // Skip this line and continue with the next line
+            }
 
             // Setting the tempobjects key and value to the values of the line content
             tempObject[key] = value 
@@ -52,6 +51,7 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
         // Returns the array of json vcard objects 
         return data 
     } catch (error) {
+        console.error('Error occurred during vCard parsing:', error);
         throw error 
     }
 }
