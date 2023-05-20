@@ -65,13 +65,19 @@ const JSONToVCard = async (jsonObj: any, file: string): Promise<void> => {
     console.log(jsonObj)
 
     try {
-        const vcard = `BEGIN:VCARD\n${Object.entries(jsonObj)
-            .filter(([key]) => key !== '_id')
-            .map(([key, value]) => `${key}:${value}`)
-            .join('\n')}\nEND:VCARD` 
+        let allVcards = ''
+
+        jsonObj.forEach((jsonVcard: any) => {
+            let vcard = `BEGIN:VCARD\n${Object.entries(jsonVcard)
+                .filter(([key]) => key !== '_id')
+                .map(([key, value]) => `${key}:${value}`)
+                .join('\n')}\nEND:VCARD` 
+            
+            allVcards = allVcards + vcard
+        });
 
         const element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(vcard));
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(allVcards));
         element.setAttribute('download', file);
         
         element.style.display = 'none';
