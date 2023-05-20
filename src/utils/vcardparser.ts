@@ -57,7 +57,13 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
 }
 
 
-const JSONToVCard = async (jsonObj: JSONData, file: string): Promise<void> => {
+const JSONToVCard = async (jsonObj: any, file: string): Promise<void> => {
+    console.log(jsonObj)
+
+    jsonObj = jsonObj?.data?.info
+
+    console.log(jsonObj)
+
     try {
         const vcard = `BEGIN:VCARD\n${Object.entries(jsonObj)
             .filter(([key]) => key !== '_id')
