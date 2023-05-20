@@ -15,7 +15,6 @@
         reader.onload = (event) => {
             const contents = event.target?.result as string
             fileContents = contents
-            processFileContents()
         }
 
         reader.readAsText(file) 
