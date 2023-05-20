@@ -40,7 +40,7 @@ const VCardToJSON = async (vcard: string): Promise<VCardData> => {
             const [key, value] = trimmedLine.split(':', 2) 
 
             if (!key || !value) {
-                console.error('Incorrect string format:', trimmedLine);
+                console.warn('Incorrect string format at:', trimmedLine);
                 continue; // Skip this line and continue with the next line
             }
 
