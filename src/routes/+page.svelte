@@ -1,9 +1,11 @@
 <script lang="ts">
 	import axios from 'axios';
     import { JSONToVCard, VCardToJSON } from '../utils/vcardparser'
+    import { BarLoader } from 'svelte-loading-spinners';
     import type {JSONData} from '../types'
 
     let fileContents: string = ''
+    let isLoading: boolean = false
 
     const handleFileChange = (event: any) => {
         const target = event.target as HTMLInputElement
@@ -17,7 +19,8 @@
             fileContents = contents
         }
 
-        reader.readAsText(file)
+        reader.readAsText(file) 
+
     }
 
     const handleSubmit = async () => {
@@ -30,12 +33,20 @@
     }
 
     const downloadVcard = async () => {
-
-        // TODO: Need to get the proper link to get all vCards
-        const json: JSONData = await axios.get('api link')
-
-        // 
-        await JSONToVCard(json, 'test')
+        try {
+            isLoading = true
+            console.log('download vcard')
+            
+            // TODO: Need to get the proper link to get all vCards
+            const json: JSONData = await axios.get('https://cache-server-production.up.railway.app/api/contacts')
+            
+            // 
+            await JSONToVCard(json, 'contacts')
+        } catch (error) {
+            console.log(error)
+        } finally {
+            isLoading = false
+        }   
     }
 </script>
 
@@ -54,13 +65,16 @@
         <input type="submit" id="submitButton" value="Send File">
     </form>
 
-    <form action="/api/contacts/zip" method="POST">
+    <form on:submit|preventDefault={downloadVcard}>
         <label for="downloadButton">Download all vCards in zip archive</label>
         <input 
-            on:click={downloadVcard}
             type="submit" 
             value="Download" 
-            name="downloadButton">
+            name="downloadButton"
+            disabled={isLoading}>
+        {#if isLoading}
+            <BarLoader size="240" color="#3170A8"/>
+        {/if}
     </form>
 
     <!-- <form action="/api/contacts/vcard" method="POST">
