@@ -28,8 +28,12 @@
         // Get json data from vcard files passed in form
         const filedata = await VCardToJSON(fileContents)
 
-        // TODO: Need to send request with filedata insted
-        console.log(filedata)
+        try {
+            const data = await axios.post('https://cache-server-production.up.railway.app/api/contacts', {filedata})
+            console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     const downloadVcard = async () => {
