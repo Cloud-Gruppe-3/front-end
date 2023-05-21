@@ -56,7 +56,7 @@
 
 
 <section>
-    <h1>Accepting v-cards 😉</h1>
+    <h1>v-cards</h1>
     <form on:submit|preventDefault={handleSubmit}>
         <input 
             on:change={handleFileChange}
@@ -70,7 +70,7 @@
     </form>
 
     <form on:submit|preventDefault={downloadVcard}>
-        <label for="downloadButton">Download all vCards in zip archive</label>
+        <label for="downloadButton">Download all vCards</label>
         <input 
             type="submit" 
             value="Download" 
@@ -80,9 +80,4 @@
             <BarLoader size="240" color="#3170A8"/>
         {/if}
     </form>
-
-    <!-- <form action="/api/contacts/vcard" method="POST">
-        <label for="downloadButton">Download all vCards as single .vcf file</label>
-        <input type="submit" value="Download" name="downloadButton">
-    </form> -->
 </section>
